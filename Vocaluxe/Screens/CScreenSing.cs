@@ -576,7 +576,7 @@ namespace Vocaluxe.Screens
                 }
                 else
                 {
-                    for (int i = 0; i < CGame.NumPlayers; i++) 
+                    for (int i = 0; i < CGame.NumPlayers; i++)
                         CGame.Players [i].VoiceNr = voiceAssignments [i];
                 }
             }

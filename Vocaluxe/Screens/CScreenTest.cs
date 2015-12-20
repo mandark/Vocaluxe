@@ -25,6 +25,10 @@ namespace Vocaluxe.Screens
 {
     public class CScreenTest : CMenu
     {
+        private System.Timers.Timer progressTimer = new System.Timers.Timer(100);
+        private SPopupGeneralProgress pb1 = new SPopupGeneralProgress();
+        private SPopupGeneralProgress pb2 = new SPopupGeneralProgress();
+
         // Version number for theme files. Increment it, if you've changed something on the theme files!
         protected override int _ScreenVersion
         {
@@ -70,6 +74,51 @@ namespace Vocaluxe.Screens
                         CGraphics.FadeTo(EScreen.Main);
                         break;
 
+                    case Keys.D1:
+                    case Keys.NumPad1:
+                        PopupTest("Confirm.Small");
+                        break;
+
+                    case Keys.D2:
+                    case Keys.NumPad2:
+                        PopupTest("Confirm.Medium");
+                        break;
+
+                    case Keys.D3:
+                    case Keys.NumPad3:
+                        PopupTest("Confirm.Big");
+                        break;
+
+                    case Keys.D4:
+                    case Keys.NumPad4:
+                        PopupTest("Alert.Small");
+                        break;
+
+                    case Keys.D5:
+                    case Keys.NumPad5:
+                        PopupTest("Alert.Medium");
+                        break;
+
+                    case Keys.D6:
+                    case Keys.NumPad6:
+                        PopupTest("Alert.Big");
+                        break;
+                    
+                    case Keys.D7:
+                    case Keys.NumPad7:
+                        PopupTest("Loading.Small");
+                        break;
+
+                    case Keys.D8:
+                    case Keys.NumPad8:
+                        PopupProgressTest(false);
+                        break;
+
+                    case Keys.D9:
+                    case Keys.NumPad9:
+                        PopupLoginTest();
+                        break;
+
                     case Keys.F:
                         //FadeAndPause();
                         break;
@@ -102,6 +151,275 @@ namespace Vocaluxe.Screens
         public override bool UpdateGame()
         {
             return true;
+        }
+
+        public void PopupTest(string type)
+        {
+            //get popup screen
+            var popup = CGraphics.GetPopup(EPopupScreens.PopupGeneral);
+
+            //reset eventhandlers
+            popup.SetDefaults();
+            //add new eventhandlers
+            popup.AddEventHandler("onKeyReturn,onKeyEscape", (Action<SPopupGeneralEvent>)PopupCallback);
+            popup.AddEventHandler("onMouseRB,onMouseLB", (Action<SPopupGeneralEvent>)PopupCallback);
+
+            //popup options
+            SPopupGeneral data = new SPopupGeneral();
+            data.TextTitle = type;
+
+            if (type.Equals("Confirm.Small"))
+            {
+                data.type = EPopupGeneralType.Confirm;
+                data.size = EPopupGeneralSize.Small;
+                data.ButtonYesLabel = "YES";
+                data.ButtonNoLabel = "NO";
+                data.TextMessage = "Its a small confirm test.";
+            }
+            else if (type.Equals("Confirm.Medium"))
+            {
+                data.type = EPopupGeneralType.Confirm;
+                data.size = EPopupGeneralSize.Medium;
+                data.ButtonYesLabel = "YES";
+                data.ButtonNoLabel = "NO";
+                data.DefaultButton = "ButtonYes";
+                data.TextMessage = "Multiline text support!\nYou can create newlines.\nOr automatic break mode: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a tristique justo. Mauris sollicitudin ex vitae nulla facilisis, ut pulvinar urna blandit. Fusce cursus fringilla odio, at lobortis felis tempor ut. Duis faucibus et lacus in mattis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nullam et suscipit ante. Quisque mattis nisi et felis pellentesque congue. Proin eu iaculis eros. Phasellus eu velit in arcu iaculis consequat. Quisque laoreet, nisl sed vehicula molestie, massa mauris mollis dui, eget lobortis metus sem quis nulla. Nam massa tortor, vulputate in hendrerit in, iaculis ut ipsum. Duis sit amet iaculis turpis. In feugiat mauris sed neque convallis pretium. Aenean id justo eget odio consectetur maximus. Vestibulum eget lectus consectetur ligula lacinia finibus. Andlastaverylongwordthatcannotbecutalongspacessocutitbylengthfinally";
+            }
+            else if (type.Equals("Confirm.Big"))
+            {
+                data.type = EPopupGeneralType.Confirm;
+                data.size = EPopupGeneralSize.Big;
+                data.ButtonYesLabel = "YES";
+                data.ButtonNoLabel = "NO";
+                data.DefaultButton = "ButtonNo";
+                data.TextMessage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a tristique justo. Mauris sollicitudin ex vitae nulla facilisis, ut pulvinar urna blandit. Fusce cursus fringilla odio, at lobortis felis tempor ut. Duis faucibus et lacus in mattis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nullam et suscipit ante. Quisque mattis nisi et felis pellentesque congue. Proin eu iaculis eros. Phasellus eu velit in arcu iaculis consequat. Quisque laoreet, nisl sed vehicula molestie, massa mauris mollis dui, eget lobortis metus sem quis nulla. Nam massa tortor, vulputate in hendrerit in, iaculis ut ipsum. Duis sit amet iaculis turpis. In feugiat mauris sed neque convallis pretium. Aenean id justo eget odio consectetur maximus. Vestibulum eget lectus consectetur ligula lacinia finibus.";
+                data.TextMessage += "\n \nQuisque elementum dui et sodales ultrices. Sed quam urna, pretium imperdiet molestie sit amet, facilisis ac diam. Aliquam interdum metus a efficitur egestas. Vivamus accumsan nulla sit amet eros semper, nec auctor neque ullamcorper. Sed eleifend pharetra est ut condimentum. Sed dolor quam, rhoncus eleifend augue et, sollicitudin vehicula arcu. Sed mi mauris, malesuada id risus quis, dapibus volutpat sem. Nullam eget orci tellus. Mauris consectetur volutpat nibh. In quis laoreet nibh, in hendrerit ligula. Integer turpis leo, suscipit vel pellentesque et, pretium at enim. Vestibulum rhoncus ultrices libero, in aliquam nibh accumsan ornare.";
+                data.TextMessage += "\n \nVestibulum tincidunt tortor ac tempor elementum. Donec nec urna ut odio consequat pretium. Suspendisse potenti. Maecenas faucibus mauris sed leo condimentum bibendum. Praesent diam dui, gravida a turpis sed, faucibus pellentesque velit. Integer cursus neque nec elit porta sollicitudin. Mauris molestie condimentum ipsum, eu rhoncus elit bibendum eget. Proin gravida eu nulla et faucibus. Vivamus id nulla sed ex ornare fermentum sit amet non nisi. Sed semper lorem turpis, elementum vulputate metus fringilla at. Proin finibus nec diam sit amet venenatis. Curabitur in justo vehicula, vestibulum neque in, accumsan erat. Mauris sit amet consectetur sapien. Ut eleifend aliquam purus varius consectetur.";
+
+            }
+            else if (type.Equals("Alert.Small"))
+            {
+                data.type = EPopupGeneralType.Alert;
+                data.size = EPopupGeneralSize.Small;
+                data.ButtonOkLabel = "YES";
+                data.TextMessage = "Its a small alert test.";
+            }
+            else if (type.Equals("Alert.Medium"))
+            {
+                data.type = EPopupGeneralType.Alert;
+                data.size = EPopupGeneralSize.Medium;
+                data.ButtonOkLabel = "YES";
+                data.TextMessage = "Its a medium alert popup,\nwith multiline text support.\nDo you see? :)";
+            }
+            else if (type.Equals("Alert.Big"))
+            {
+                data.type = EPopupGeneralType.Alert;
+                data.size = EPopupGeneralSize.Big;
+                data.ButtonOkLabel = "YES";
+                data.TextMessage = "Its a big alert popup,\nwith multiline text support.\nDo you see? :)";
+            }
+            else if (type.Equals("Loading.Small"))
+            {
+                data.type = EPopupGeneralType.Loading;
+                data.size = EPopupGeneralSize.Small;
+                data.TextMessage = "Loading simple text.";
+                data.ButtonNoLabel = "Cancel";
+            }
+
+            //set popup display data
+            popup.SetDisplayData(data);
+            //and show it
+            CGraphics.ShowPopup(EPopupScreens.PopupGeneral);
+        }
+
+        public void PopupLoginTest()
+        {
+            //get popup screen
+            var popup = CGraphics.GetPopup(EPopupScreens.PopupGeneral);
+
+            //reset eventhandlers
+            popup.SetDefaults();
+            //add new eventhandlers
+            popup.AddEventHandler("onKeyReturn,onKeyEscape,onMouseLB", (Action<SPopupGeneralEvent>)PopupLoginCallback);
+
+            SPopupGeneral data = new SPopupGeneral();
+            data.TextTitle   = "Login to somewhere";
+            data.TextMessage = "";
+           
+            data.type = EPopupGeneralType.Login;
+            data.size = EPopupGeneralSize.Medium;
+
+            data.ButtonNoLabel = "Cancel";
+            data.ButtonYesLabel = "Login!";
+            popup.SetDisplayData(data);
+            CGraphics.ShowPopup(EPopupScreens.PopupGeneral);
+        }
+
+        public void PopupLoginCallback(SPopupGeneralEvent eventData)
+        {
+            if (eventData.name.Equals("onKeyEscape") 
+                || (eventData.name.Equals("onKeyReturn") && eventData.target.Equals("ButtonNo"))
+                || (eventData.name.Equals("onMouseLB") && eventData.target.Equals("ButtonNo"))
+            )
+            {
+                CGraphics.HidePopup(EPopupScreens.PopupGeneral);
+            }
+            else if ((eventData.name.Equals("onKeyReturn") && eventData.target.Equals("ButtonYes"))
+                || (eventData.name.Equals("onMouseLB") && eventData.target.Equals("ButtonYes")))
+            {
+                var popup = CGraphics.GetPopup(EPopupScreens.PopupGeneral);
+                var data = popup.GetDisplayData();
+
+                data.TextMessage = data.Username + " / " + data.Password + " --> Failed to login...";
+                popup.SetDisplayData(data);
+                CGraphics.ShowPopup(EPopupScreens.PopupGeneral);
+            }
+        }
+
+
+        public void PopupProgressTest(Boolean cont)
+        {
+            var popup = CGraphics.GetPopup(EPopupScreens.PopupGeneral);
+            //reset eventhandlers
+            popup.SetDefaults();
+            //add new eventhandlers
+            popup.AddEventHandler("onMouseRB,onKeyEscape", (Action<SPopupGeneralEvent>)PopupProgressCallback);
+           
+            SPopupGeneral data = new SPopupGeneral();
+            data.TextTitle = "Loading sample";
+            data.type = EPopupGeneralType.Loading;
+            data.size = EPopupGeneralSize.Medium;
+            data.ButtonNoLabel = "Cancel";
+            data.ProgressBar1Visible = true;
+            data.ProgressBar2Visible = true;
+
+            popup.SetDisplayData(data);
+            if (!cont) {
+                pb1.target = 1;
+                pb1.percentage = 0;
+            }
+            pb1.title = "Downloading xyz - zyx ...";
+            popup.SetProgressData(pb1);
+
+
+            pb2.target = 2;
+            if (!cont)
+            {
+                pb2.total = 10;
+                pb2.loaded = 0;
+                pb2.title = "Downloading 1/10";
+            }
+            else
+            {
+                pb2.title = "Downloading "+pb2.loaded+"/"+pb2.total;
+            }
+            
+            popup.SetProgressData(pb2);
+
+            CGraphics.ShowPopup(EPopupScreens.PopupGeneral);
+
+            progressTimer.Elapsed += (timerSender, timerEvent) => updateProgressBars(timerSender, timerEvent);
+            progressTimer.Enabled = true;
+            progressTimer.Start();
+
+           
+        }
+
+        public void updateProgressBars(object source, System.Timers.ElapsedEventArgs e)
+        {
+            var popup = CGraphics.GetPopup(EPopupScreens.PopupGeneral);
+            if (pb1.percentage < 100) { 
+                 pb1.percentage++;
+                 popup.SetProgressData(pb1);
+            }
+            else if (pb1.percentage == 100)
+            {
+                if (pb2.loaded < pb2.total)
+                {
+                    pb2.loaded++;
+                    pb1.percentage = 0;
+                    pb1.title = "Downloading xyz / "+pb2.loaded;
+                    popup.SetProgressData(pb1);
+                    pb2.title = "Downloading "+pb2.loaded+"/"+pb2.total;
+                    popup.SetProgressData(pb2);
+                }
+                else
+                {
+                    progressTimer.Enabled = false;
+                    progressTimer.Stop();
+                    CGraphics.HidePopup(EPopupScreens.PopupGeneral);
+                }
+            }
+        }
+
+        public void PopupProgressCallback(SPopupGeneralEvent eventData)
+        {
+            if (eventData.name.Equals("onKeyEscape") || eventData.name.Equals("onMouseRB"))
+            {
+                //create new popup
+                var popup = CGraphics.GetPopup(EPopupScreens.PopupGeneral);
+                popup.SetDefaults();
+                popup.AddEventHandler("onKeyReturn,onKeyEscape,onMouseLB", (Action<SPopupGeneralEvent>)PopupProgressOnCancel);
+                SPopupGeneral data = new SPopupGeneral();
+                data.TextTitle = "Confirm";
+                data.type = EPopupGeneralType.Confirm;
+                data.size = EPopupGeneralSize.Small;
+                data.ButtonYesLabel = "YES";
+                data.ButtonNoLabel = "NO";
+                data.TextMessage = "Do you want to cancel?";
+
+                popup.SetDisplayData(data);
+                CGraphics.ShowPopup(EPopupScreens.PopupGeneral);
+            }
+        }
+
+        public void PopupProgressOnCancel(SPopupGeneralEvent eventData)
+        {
+            if (eventData.name.Equals("onKeyReturn") || eventData.name.Equals("onMouseLB"))
+            {
+                if (eventData.target != null)
+                {
+                    if (eventData.target.Equals("ButtonYes") || eventData.target.Equals("ButtonOk"))
+                    {
+                        progressTimer.Enabled = false;
+                        progressTimer.Stop();
+                        CGraphics.HidePopup(EPopupScreens.PopupGeneral);
+                    }
+                    else if (eventData.target.Equals("ButtonNo"))
+                    {
+                        PopupProgressTest(true);
+                    }
+                }
+            }
+            else if (eventData.name.Equals("onKeyEscape"))
+            {
+                PopupProgressTest(true);
+            }
+        }
+
+        public void PopupCallback(SPopupGeneralEvent eventData)
+        {
+            if (eventData.name.Equals("onKeyReturn") || eventData.name.Equals("onMouseLB"))
+            {
+                if (eventData.target != null)
+                {
+                    if (eventData.target.Equals("ButtonYes") || eventData.target.Equals("ButtonOk"))
+                    {
+                        var currPopup = CGraphics.GetPopup(EPopupScreens.PopupGeneral);
+
+                        Console.WriteLine("You selected YES!");
+                        CGraphics.HidePopup(EPopupScreens.PopupGeneral);
+                    }
+                    else if (eventData.target.Equals("ButtonNo"))
+                    {
+                        CGraphics.HidePopup(EPopupScreens.PopupGeneral);
+                    }
+                }
+            }
+            else if (eventData.name.Equals("onKeyEscape") || eventData.name.Equals("onMouseRB"))
+            {
+                CGraphics.HidePopup(EPopupScreens.PopupGeneral);
+            }
         }
 
         /*

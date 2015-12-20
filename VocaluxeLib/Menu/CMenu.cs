@@ -97,6 +97,14 @@ namespace VocaluxeLib.Menu
             CBase.Config.RemoveSongMenuListener(_OnSongMenuChanged);
         }
 
+        //cPopupScreenGeneral related functions
+        public virtual void SetDefaults() { }
+        public virtual void AddEventHandler(string eventType, Action<SPopupGeneralEvent> callback) { }
+        public virtual void RemoveAllEventHandler() { }
+        public virtual void SetDisplayData(SPopupGeneral data) { }
+        public virtual void SetProgressData(SPopupGeneralProgress data) { }
+        public virtual SPopupGeneral GetDisplayData() { return new SPopupGeneral(); }
+
         public override void Init()
         {
             base.Init();
@@ -450,6 +458,7 @@ namespace VocaluxeLib.Menu
         {
             return new CSingNotes(PartyModeID);
         }
+
 
         public CNameSelection GetNewNameSelection()
         {

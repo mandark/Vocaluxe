@@ -267,6 +267,40 @@ namespace VocaluxeLib
         public int Y;
         public int Z;
     }
+
+    public struct SPopupGeneral
+    {
+        public EPopupGeneralType type;
+        public EPopupGeneralSize size;
+        public string TextTitle;
+        public string TextMessage;
+        public string ButtonYesLabel;
+        public string ButtonNoLabel;
+        public string ButtonOkLabel;
+        public string DefaultButton;
+        public bool ProgressBar1Visible;
+        public bool ProgressBar2Visible;
+        public string ProgressBar1Title;
+        public string ProgressBar2Title;
+        public string Username;
+        public string Password;
+    }
+
+    public struct SPopupGeneralProgress
+    {
+        public int target;
+        public string title;
+        public float percentage;
+        public float loaded;
+        public float total;
+    }
+
+    public struct SPopupGeneralEvent
+    {
+        public string target;
+        public string name;
+    }
+
     #endregion Drawing
 
     #region Inputs
